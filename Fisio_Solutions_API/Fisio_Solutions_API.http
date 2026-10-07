@@ -1,0 +1,6 @@
+@Fisio_Solutions_API_HostAddress = http://localhost:5002
+
+GET {{Fisio_Solutions_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
