@@ -61,11 +61,11 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Ensure SQLite database is created
+// Ensure SQLite database is created and seeded
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.EnsureCreated();
+    DbInitializer.Initialize(dbContext);
 }
 
 // Configure HTTP request pipeline

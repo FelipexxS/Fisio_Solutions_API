@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fisio_Solutions_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dfc68185f7b8fcb47c074ff9252eac703eab3712")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc0a8f66709dee4d1edcac5d077f3a494e11f8ab")]
 [assembly: System.Reflection.AssemblyProductAttribute("Fisio_Solutions_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Fisio_Solutions_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

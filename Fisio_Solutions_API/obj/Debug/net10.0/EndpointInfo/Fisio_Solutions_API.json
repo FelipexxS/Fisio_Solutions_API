@@ -6,48 +6,491 @@
   },
   "servers": [
     {
-      "url": "https://localhost:7273"
-    },
-    {
       "url": "http://localhost:5002"
     }
   ],
   "paths": {
-    "/WeatherForecast": {
-      "get": {
+    "/api/Auth/register": {
+      "post": {
         "tags": [
-          "WeatherForecast"
+          "Auth"
         ],
-        "operationId": "GetWeatherForecast",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
               }
             }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/google": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleLoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleLoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/dicas-ergonomia": {
+      "get": {
+        "tags": [
+          "DicasErgonomia"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DicasErgonomia"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarDicaErgonomiaDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarDicaErgonomiaDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarDicaErgonomiaDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/dicas-ergonomia/{dicaErgonomiaId}": {
+      "get": {
+        "tags": [
+          "DicasErgonomia"
+        ],
+        "parameters": [
+          {
+            "name": "dicaErgonomiaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "DicasErgonomia"
+        ],
+        "parameters": [
+          {
+            "name": "dicaErgonomiaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarDicaErgonomiaDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarDicaErgonomiaDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarDicaErgonomiaDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DicasErgonomia"
+        ],
+        "parameters": [
+          {
+            "name": "dicaErgonomiaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Exercicios": {
+      "get": {
+        "tags": [
+          "Exercicios"
+        ],
+        "parameters": [
+          {
+            "name": "regiaoCorpo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "usuarioId",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Exercicios/{id}": {
+      "get": {
+        "tags": [
+          "Exercicios"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "usuarioId",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Listas": {
+      "post": {
+        "tags": [
+          "Listas"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdicionarItemListaRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdicionarItemListaRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdicionarItemListaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Listas"
+        ],
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Listas/itens/{exercicioId}": {
+      "delete": {
+        "tags": [
+          "Listas"
+        ],
+        "parameters": [
+          {
+            "name": "exercicioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "usuarioId",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Listas/{exercicioId}": {
+      "delete": {
+        "tags": [
+          "Listas"
+        ],
+        "parameters": [
+          {
+            "name": "exercicioId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "usuarioId",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -55,14 +498,13 @@
   },
   "components": {
     "schemas": {
-      "WeatherForecast": {
+      "AdicionarItemListaRequest": {
+        "required": [
+          "exercicioId"
+        ],
         "type": "object",
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "temperatureC": {
+          "exercicioId": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "integer",
@@ -70,19 +512,151 @@
             ],
             "format": "int32"
           },
-          "temperatureF": {
+          "usuarioId": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
             "format": "int32"
           },
-          "summary": {
+          "nomeLista": {
             "type": [
               "null",
               "string"
             ]
+          },
+          "categoria": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "AtualizarDicaErgonomiaDto": {
+        "required": [
+          "titulo",
+          "conteudo"
+        ],
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string"
+          },
+          "conteudo": {
+            "type": "string"
+          },
+          "imagemIlustracaoUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "ativo": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CriarDicaErgonomiaDto": {
+        "required": [
+          "titulo",
+          "conteudo"
+        ],
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string"
+          },
+          "conteudo": {
+            "type": "string"
+          },
+          "imagemIlustracaoUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ForgotPasswordRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "GoogleLoginRequest": {
+        "required": [
+          "googleId",
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "googleId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "RegisterRequest": {
+        "required": [
+          "fullName",
+          "birthDate",
+          "email",
+          "profession",
+          "password",
+          "confirmPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "profession": {
+            "type": "string"
+          },
+          "password": {
+            "minLength": 6,
+            "type": "string"
+          },
+          "confirmPassword": {
+            "type": "string"
           }
         }
       }
@@ -90,7 +664,16 @@
   },
   "tags": [
     {
-      "name": "WeatherForecast"
+      "name": "Auth"
+    },
+    {
+      "name": "DicasErgonomia"
+    },
+    {
+      "name": "Exercicios"
+    },
+    {
+      "name": "Listas"
     }
   ]
 }
