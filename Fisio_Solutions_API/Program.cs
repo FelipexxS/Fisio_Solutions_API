@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Fisio_Solutions_API.Data;
 using Fisio_Solutions_API.Services;
@@ -13,9 +14,23 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
+// Add Memory Cache
+builder.Services.AddMemoryCache();
+
 // Add Custom Services
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IListaExerciciosCaretaker, ListaExerciciosCaretaker>();
+
+// Add ExercicioService with GoF Decorator Chain (ExercicioService -> CachedExercicioServiceDecorator -> UserSavedExercicioDecorator)
+builder.Services.AddScoped<ExercicioService>();
+builder.Services.AddScoped<IExercicioService>(sp =>
+{
+    IExercicioService service = sp.GetRequiredService<ExercicioService>();
+    service = new CachedExercicioServiceDecorator(service, sp.GetRequiredService<IMemoryCache>());
+    service = new UserSavedExercicioDecorator(service, sp.GetRequiredService<AppDbContext>());
+    return service;
+});
 
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");

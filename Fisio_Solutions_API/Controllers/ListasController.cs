@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Fisio_Solutions_API.Data;
 using Fisio_Solutions_API.DTOs;
 using Fisio_Solutions_API.Models;
+using Fisio_Solutions_API.Services;
 
 namespace Fisio_Solutions_API.Controllers
 {
@@ -12,10 +13,12 @@ namespace Fisio_Solutions_API.Controllers
     public class ListasController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IListaExerciciosCaretaker _caretaker;
 
-        public ListasController(AppDbContext context)
+        public ListasController(AppDbContext context, IListaExerciciosCaretaker caretaker)
         {
             _context = context;
+            _caretaker = caretaker;
         }
 
         /// <summary>
@@ -89,6 +92,9 @@ namespace Fisio_Solutions_API.Controllers
                     totalSalvos = lista.Itens.Count
                 });
             }
+
+            // Salva snapshot (Memento) do estado atual da lista antes de adicionar o novo item
+            _caretaker.SaveState(userId.Value, lista.SaveToMemento());
 
             // Cria o novo item na lista na próxima posição ordinal
             var proximaPosicao = lista.Itens.Count + 1;
@@ -218,6 +224,9 @@ namespace Fisio_Solutions_API.Controllers
                 return NotFound(new { message = "Exercício não encontrado na lista." });
             }
 
+            // Salva snapshot (Memento) do estado atual da lista antes de remover o exercício
+            _caretaker.SaveState(userId.Value, lista.SaveToMemento());
+
             _context.ListaExercicioItens.Remove(item);
             await _context.SaveChangesAsync();
 
@@ -228,6 +237,54 @@ namespace Fisio_Solutions_API.Controllers
                 message = "Exercício removido da lista com sucesso.",
                 exercicioId = exercicioId,
                 totalRestantes = totalRestantes
+            });
+        }
+
+        /// <summary>
+        /// Desfaz a última alteração (adição ou remoção de exercício) realizada na lista do usuário
+        /// utilizando o padrão comportamental Memento (GoF).
+        /// POST /api/Listas/undo
+        /// </summary>
+        [HttpPost("undo")]
+        public async Task<IActionResult> DesfazerUltimaAlteracao([FromQuery] int? usuarioId)
+        {
+            var userId = usuarioId ?? GetUserIdFromClaims();
+            if (!userId.HasValue)
+            {
+                var firstUser = await _context.Users.FirstOrDefaultAsync();
+                userId = firstUser?.Id;
+            }
+
+            if (!userId.HasValue)
+            {
+                return NotFound(new { message = "Lista não encontrada para o usuário." });
+            }
+
+            var lista = await _context.ListasExercicios
+                .Include(l => l.Itens)
+                .FirstOrDefaultAsync(l => l.UsuarioId == userId.Value);
+
+            if (lista == null)
+            {
+                return NotFound(new { message = "Lista não encontrada." });
+            }
+
+            var memento = _caretaker.PopState(userId.Value);
+            if (memento == null)
+            {
+                return BadRequest(new { message = "Não há alterações anteriores para desfazer na lista." });
+            }
+
+            // Originator restaura seu estado interno a partir do Memento
+            lista.RestoreFromMemento(memento);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Última alteração desfeita com sucesso.",
+                listaId = lista.Id,
+                totalSalvos = lista.Itens.Count,
+                restoredSnapshotFrom = memento.SavedAt
             });
         }
 
